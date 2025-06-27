@@ -1,0 +1,2 @@
+# FishBot
+🎣 Twitch Fishing Bot
