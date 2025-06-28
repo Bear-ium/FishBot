@@ -1,60 +1,51 @@
 import time
 
 from Modules.Twitch import Send
-from Modules.Tables import admins
 from Modules.Fish import Reel
-from Modules.Settings import cooldown_seconds
+from Modules.Configurations import COOLDOWN_SECONDS, ADMINS, COMMAND_HANDLE
 
+# Tracks user cooldowns for rate-limiting
 cooldowns = {}
 
-def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
+def CommandHandler(irc, channel: str, info: tuple) -> bool:
     command, args, user = info
     user = user.lower()
 
-    match command:
-        case "-hello":
-            Send(irc, CHANNEL, "Hello World!")
+    if not command.starswith(COMMAND_HANDLE):
+        return False
+    
+    cmd = command[len(COMMAND_HANDLE):]
 
-        case "-user":
-            if args:
-                Send(irc, CHANNEL, f"{user}, you passed arguments: {' '.join(args)}")
-            else:
-                Send(irc, CHANNEL, f"{user}")
-
-        case "-shoutout" | "-so":
-            if user not in admins:
-                # User isn't an admin so just ignore them
-                return False
-            
-            if not args:
-                # Forgot to include channel
-                Send(irc, CHANNEL, "You forgot to include the channel! Usage: -so @ChannelName")
-                return False
-            
-            arg = args[0].strip('@')
-            Send(irc, CHANNEL, f"You should follow @{arg} on twitch.tv/{arg}")
-
-        case "-fish":
+    match cmd:
+        case "hello":
+            Send(irc, channel, f"Hello {user}!")
+        
+        case "user":
+            msg = f"{user}, you passed arguments: {' '.join(args)}" if args else f"{user}"
+            Send(irc, channel, msg)
+        
+        case "fish":
             now = time.time()
             last_used = cooldowns.get(user, 0)
 
-            if now - last_used < cooldown_seconds:
+            if now - last_used < COOLDOWN_SECONDS:
                 return False
-
+            
             fish = Reel(user)
-            Send(irc, CHANNEL, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
+            Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
             cooldowns[user] = now
-
-        case "-quit":
-            if user in admins:
-                Send(irc, CHANNEL, "Goodbye World!")
+        
+        case "quit":
+            if user in ADMINS:
+                Send(irc, channel, "Goodbye World!")
                 print("[QUIT] Quit command accepted")
                 return True
             else:
                 print("[QUIT] Unauthorized user tried to quit.")
-
+        
         case _:
-            # Unknown or unhandled command
+            # Unkown Command
             pass
+
 
     return False

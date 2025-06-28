@@ -1,1 +1,0 @@
-cooldown_seconds = 5 # Seconds

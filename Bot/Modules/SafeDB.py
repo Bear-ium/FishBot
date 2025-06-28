@@ -1,10 +1,16 @@
 import threading
 from Modules.Database import Database
 
-_local_thread = threading.local()
+_thread_local: threading.local = threading.local()
 
 def getDB() -> Database:
-    """Returns a local thread Database instance for safe access across different threads."""
-    if not hasattr(_local_thread, "db"):
-        _local_thread.db = Database()
-    return _local_thread.db
+    """
+    Returns a thread-local Database instance.
+
+    Ensures that each thread gets its own connection-safe Database wrapper.
+
+    @return Database: A thread-local SQLite database object
+    """
+    if not hasattr(_thread_local, "db"):
+        _thread_local.db = Database()
+    return _thread_local.db
