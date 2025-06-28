@@ -48,9 +48,10 @@ def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
         case "-quit":
             if user in admins:
                 Send(irc, CHANNEL, "Goodbye World!")
+                print("[QUIT] Quit command accepted")
                 return True
             else:
-                pass
+                print("[QUIT] Unauthorized user tried to quit.")
 
         case _:
             # Unknown or unhandled command

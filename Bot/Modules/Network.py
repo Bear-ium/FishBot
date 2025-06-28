@@ -11,6 +11,7 @@ def IRCConfig(irc, SERVER="irc.chat.twitch.tv", PORT=6667):
     @return None
     """
     irc.connect((SERVER, PORT))
+    irc.settimeout(1)
 
 
 def IRCInfo(irc, TOKEN, NICKNAME, CHANNEL):

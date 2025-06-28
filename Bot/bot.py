@@ -1,6 +1,8 @@
 import os
 import threading
 import queue
+import sys
+import socket
 from dotenv import load_dotenv
 
 from Modules.Twitch import GetUsername
@@ -14,7 +16,10 @@ BOTNAME = os.getenv("BOTNAME")
 TOKEN = os.getenv("OAUTH_ID")
 CHANNEL = os.getenv("LIVE_CHANNEL")
 
-# Establish an IRC connection
+# Global shutdown flag
+shutdown_requested = False
+
+# Establish IRC connection
 irc = connect(TOKEN, BOTNAME, CHANNEL)
 
 # Initialize the command queue
@@ -24,20 +29,34 @@ def worker():
     while True:
         data = command_queue.get()
         if data is None:
+            print("[WORKER] Shutdown signal received")
+            command_queue.task_done()
             break
-        irc, channel, command_info = data
-        try:
-            CommandHandler(irc, channel, command_info)
-        except Exception as e:
-            print(f"Error handling command: {e}")
-        command_queue.task_done()
 
-# Start the worker thread
-threading.Thread(target=worker, daemon=True).start()
+        irc, channel, command_info = data
+
+        try:
+            print(f"[WORKER] Handling command: {command_info}")
+            should_quit = CommandHandler(irc, channel, command_info)
+
+            if should_quit:
+                global shutdown_requested
+                shutdown_requested = True
+                print("[WORKER] Shutdown requested by command")
+        except Exception as e:
+            print(f"[WORKER] Error handling command: {e}")
+
+        command_queue.task_done()
 
 def HandleMessage(response: str) -> bool:
     """Process an incoming IRC message."""
-    print(response.strip())
+    global shutdown_requested
+
+    if shutdown_requested:
+        print("[HANDLE] Ignored message due to shutdown")
+        return False
+
+    print(f"[RAW] {response.strip()}")
 
     if "PRIVMSG" not in response:
         return False
@@ -56,25 +75,36 @@ def HandleMessage(response: str) -> bool:
     command = words[0].lower()
     args = words[1:]
 
-    # Queue the command for processing
+    print(f"[PARSED] {user}: {command} {args}")
     command_queue.put((irc, CHANNEL, (command, args, user)))
+    print(f"[QUEUED] {command} from {user}")
     return False
 
 def main():
-    """Main event loop."""
     while True:
         try:
             response = irc.recv(2048).decode("utf-8")
+        except socket.timeout:
+            if shutdown_requested:
+                break
+            continue
         except Exception as e:
-            print(f"Error receiving message: {e}")
+            print(f"[MAIN] Error receiving message: {e}")
             continue
 
         if response.startswith("PING"):
             irc.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
             continue
 
-        if HandleMessage(response):
-            break
+        HandleMessage(response)
+
+    print("[MAIN] Exiting main loop...")
+    command_queue.put(None)
+    command_queue.join()
+    irc.close()
+    print("[MAIN] IRC connection closed. Exiting.")
+    sys.exit(0)
 
 if __name__ == "__main__":
+    threading.Thread(target=worker, daemon=True).start()
     main()
