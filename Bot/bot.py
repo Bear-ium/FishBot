@@ -1,4 +1,6 @@
 import os
+import threading
+import queue
 from dotenv import load_dotenv
 
 from Modules.Twitch import GetUsername
@@ -15,12 +17,29 @@ CHANNEL = os.getenv("LIVE_CHANNEL")
 # Establish an IRC connection
 irc = connect(TOKEN, BOTNAME, CHANNEL)
 
+# Initialize the command queue
+command_queue = queue.Queue()
+
+def worker():
+    while True:
+        data = command_queue.get()
+        if data is None:
+            break
+        irc, channel, command_info = data
+        try:
+            CommandHandler(irc, channel, command_info)
+        except Exception as e:
+            print(f"Error handling command: {e}")
+        command_queue.task_done()
+
+# Start the worker thread
+threading.Thread(target=worker, daemon=True).start()
 
 def HandleMessage(response: str) -> bool:
     """Process an incoming IRC message."""
     print(response.strip())
 
-    if not "PRIVMSG" in response:
+    if "PRIVMSG" not in response:
         return False
 
     parts = response.split(":", 2)
@@ -37,14 +56,18 @@ def HandleMessage(response: str) -> bool:
     command = words[0].lower()
     args = words[1:]
 
-    # Run the command and see if it requests termination
-    return CommandHandler(irc, CHANNEL, (command, args, user))
-
+    # Queue the command for processing
+    command_queue.put((irc, CHANNEL, (command, args, user)))
+    return False
 
 def main():
     """Main event loop."""
     while True:
-        response = irc.recv(2048).decode("utf-8")
+        try:
+            response = irc.recv(2048).decode("utf-8")
+        except Exception as e:
+            print(f"Error receiving message: {e}")
+            continue
 
         if response.startswith("PING"):
             irc.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
@@ -52,7 +75,6 @@ def main():
 
         if HandleMessage(response):
             break
-
 
 if __name__ == "__main__":
     main()

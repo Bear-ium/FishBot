@@ -13,7 +13,7 @@ class Database:
         if self.connection:
             self.connection.close()
         
-        self.connection = sqlite3.connect(self.db_name)
+        self.connection = sqlite3.connect(self.db_name, check_same_thread=False)
         self.cursor = self.connection.cursor()
     
     def change_database(self, new_db_name: str):

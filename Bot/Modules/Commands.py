@@ -1,6 +1,11 @@
+import time
+
 from Modules.Twitch import Send
 from Modules.Tables import admins
 from Modules.Fish import Reel
+from Modules.Settings import cooldown_seconds
+
+cooldowns = {}
 
 def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
     command, args, user = info
@@ -30,8 +35,15 @@ def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
             Send(irc, CHANNEL, f"You should follow @{arg} on twitch.tv/{arg}")
 
         case "-fish":
+            now = time.time()
+            last_used = cooldowns.get(user, 0)
+
+            if now - last_used < cooldown_seconds:
+                return False
+
             fish = Reel(user)
             Send(irc, CHANNEL, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
+            cooldowns[user] = now
 
         case "-quit":
             if user in admins:
