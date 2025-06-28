@@ -35,6 +35,7 @@ class TwitchBot:
             data = self.command_queue.get()
             if data is None:
                 print("[WORKER] Shutdown signal received!")
+                self.command_queue.task_done()
                 break
 
             irc, channel, command_info = data
@@ -73,20 +74,26 @@ class TwitchBot:
         print("[BOT] Starting main loop...")
 
         try:
-            while not self.shutdown_requested.is_set():
+            while True:
+                if self.shutdown_requested.is_set():
+                    break
+
+                
                 try:
                     response = self.irc.recv()
+                    
                 except socket.timeout:
+                    if self.shutdown_requested.is_set():
+                        break
                     continue
+                
                 except Exception as e:
                     print(f"[MAIN LOOP] Error: {e}")
                     continue
 
                 if response.startswith("PING"):
-                    print("[IRC] PING received — replying with PONG.")  # remove
                     self.irc.send_raw("PONG :tmi.twitch.tv")
                 else:
-                    print(f"[RAW] {response.strip()}") # remove
                     self.handle_message(response)
         finally:
             print("[BOT] Cleaning up...")
