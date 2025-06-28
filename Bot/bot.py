@@ -16,7 +16,7 @@ CHANNEL = os.getenv("LIVE_CHANNEL")
 irc = connect(TOKEN, BOTNAME, CHANNEL)
 
 
-def handle_message(response: str) -> bool:
+def HandleMessage(response: str) -> bool:
     """Process an incoming IRC message."""
     print(response.strip())
 
@@ -50,7 +50,7 @@ def main():
             irc.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
             continue
 
-        if handle_message(response):
+        if HandleMessage(response):
             break
 
 
