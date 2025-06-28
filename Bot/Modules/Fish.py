@@ -1,5 +1,7 @@
 import random
+import time
 from Modules.Tables import fishVariants
+from Modules.SafeDB import getDB
 
 class Fish:
     VARIANTS = [
@@ -40,11 +42,29 @@ class Fish:
                 self.variant = variant["name"]
                 self.variant_multiplier = variant["multiplier"]
                 return
+        
+        self.variant = "Normal"
 
     def __str__(self):
         return f"{self.name} ({self.weight}kg) — {self.value} coins"
 
-def Reel():
+def Reel(user: str):
     fishData = random.choice(fishVariants)
     fish = Fish(**fishData)
+    
+    db = getDB()
+    db.execute(
+        """
+        INSERT INTO catches (user, fish_name, weight, value, variant, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (user, 
+         fish.base_name, 
+         int(fish.weight * 1000), # kg -> g
+         fish.value, 
+         fish.variant, 
+         int(time.time())
+         )
+    )
+    
     return fish

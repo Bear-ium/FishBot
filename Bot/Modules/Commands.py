@@ -30,7 +30,7 @@ def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
             Send(irc, CHANNEL, f"You should follow @{arg} on twitch.tv/{arg}")
 
         case "-fish":
-            fish = Reel()
+            fish = Reel(user)
             Send(irc, CHANNEL, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
 
         case "-quit":

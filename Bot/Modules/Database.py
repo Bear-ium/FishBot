@@ -4,8 +4,8 @@ from typing import Any, List, Tuple, Optional
 class Database:
     def __init__(self, db_name: str = "Storage.db"):
         self.db_name = db_name
-        self.connection = Optional[sqlite3.Connection] = None
-        self.cursor = Optional[sqlite3.Cursor] = None
+        self.connection: Optional[sqlite3.Connection] = None
+        self.cursor: Optional[sqlite3.Cursor] = None
         self.connect()
     
     def connect(self):
@@ -14,7 +14,7 @@ class Database:
             self.connection.close()
         
         self.connection = sqlite3.connect(self.db_name)
-        self.cursor = sqlite3.connection.cursor()
+        self.cursor = self.connection.cursor()
     
     def change_database(self, new_db_name: str):
         """Switch to a different SQLite based Database file."""
