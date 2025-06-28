@@ -29,7 +29,7 @@ class Fish:
 
         self.name = f"{self.variant} {self.base_name}" if self.variant else self.base_name
         self.value = int(self.base_value * self.weight * self.variant_multiplier)
-        self.weight = float(self.weight * self.variant_multiplier)
+        self.weight = round((self.weight * self.variant_multiplier), 2)
 
     def roll_variant(self):
         roll = random.uniform(0, 100)

@@ -17,19 +17,28 @@ def CommandHandler(irc, CHANNEL, info: tuple) -> bool:
                 Send(irc, CHANNEL, f"{user}")
 
         case "-shoutout" | "-so":
-            if user in admins and args:
-                arg = args[0].strip('@')
-                Send(irc, CHANNEL, f"You should follow @{arg} on twitch.tv/{arg}")
-            else:
-                Send(irc, CHANNEL, "You either need to be an Admin, or you forgot to add the channel!")
+            if user not in admins:
+                # User isn't an admin so just ignore them
+                return False
+            
+            if not args:
+                # Forgot to include channel
+                Send(irc, CHANNEL, "You forgot to include the channel! Usage: -so @ChannelName")
+                return False
+            
+            arg = args[0].strip('@')
+            Send(irc, CHANNEL, f"You should follow @{arg} on twitch.tv/{arg}")
 
         case "-fish":
             fish = Reel()
             Send(irc, CHANNEL, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
 
         case "-quit":
-            Send(irc, CHANNEL, "Goodbye World!")
-            return True
+            if user in admins:
+                Send(irc, CHANNEL, "Goodbye World!")
+                return True
+            else:
+                pass
 
         case _:
             # Unknown or unhandled command
