@@ -11,7 +11,7 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
     command, args, user = info
     user = user.lower()
 
-    if not command.starswith(COMMAND_HANDLE):
+    if not command.startswith(COMMAND_HANDLE):
         return False
     
     cmd = command[len(COMMAND_HANDLE):]

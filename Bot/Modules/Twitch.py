@@ -11,7 +11,10 @@ def Send(irc, channel: str, msg: str):
     if not channel.startswith("#"):
         raise ValueError("Channel must start with '#'")
     
-    irc.send(f"PRIVMSG {channel} :{msg}\r\n".encode("utf-8"))
+    if hasattr(irc, "send_raw"):
+        irc.send_raw(f"PRIVMSG {channel} :{msg}")
+    else:
+        irc.send(f"PRIVMSG {channel} :{msg}\r\n".encode("utf-8"))
 
 def GetUsername(raw: str) -> str:
     """

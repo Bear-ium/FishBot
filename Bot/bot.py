@@ -83,8 +83,10 @@ class TwitchBot:
                     continue
 
                 if response.startswith("PING"):
+                    print("[IRC] PING received — replying with PONG.")  # remove
                     self.irc.send_raw("PONG :tmi.twitch.tv")
                 else:
+                    print(f"[RAW] {response.strip()}") # remove
                     self.handle_message(response)
         finally:
             print("[BOT] Cleaning up...")
