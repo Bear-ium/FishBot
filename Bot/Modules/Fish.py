@@ -11,6 +11,7 @@ from Modules.Webhook import Webhook
 
 load_dotenv()
 WEBHOOK_KEY = cast(str, os.getenv("WEBHOOK"))
+Web = Webhook(WEBHOOK_KEY)
 
 class Fish:
     VARIANTS = FISH_VARIANT_TIERS
@@ -40,6 +41,7 @@ class Fish:
             if roll <= cumulative:
                 self.variant = variant["name"]
                 self.variant_multiplier = variant["multiplier"]
+                
                 return
 
         self.variant = "Normal"
@@ -62,8 +64,16 @@ def Reel(user: str) -> Fish:
         base_value=fish_data["base_value"]
     )
     
-    Web = Webhook(WEBHOOK_KEY)
-    Web.send_message(f"{user} caught a {fish.name}")
+    (
+        lambda: (
+            None
+            if fish.variant_multiplier <= 4.5
+            else Web.send_message(f"{user} caught a Rare ({fish.variant}) variant!")
+            if fish.variant_multiplier <= 6.5
+            else Web.send_message(f"{user} caught a Legendary ({fish.variant}) variant!")
+        )
+    )()
+
 
     db = getDB()
     db.execute(

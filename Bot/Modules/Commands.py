@@ -44,6 +44,26 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
             cooldowns[user] = now
         
+        case "multi-fish":
+            if not user in ADMINS:
+                return False
+            
+            if not args:
+                return False
+
+            try:
+                num = int(args[0])
+            except ValueError as e:
+                print(f"[DEBUG] Invalid number provided: {e}")
+                return False
+
+            for i in range(1, num + 1):
+                fish = Reel(user)
+                Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
+
+            Send(irc, channel, f"Fished x{num} times!")
+
+        
         case "testing":
             if user in ADMINS:
                 _IsTesting = not _IsTesting
