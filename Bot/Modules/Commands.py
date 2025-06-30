@@ -6,8 +6,11 @@ from Modules.Configurations import COOLDOWN_SECONDS, ADMINS, COMMAND_HANDLE
 
 # Tracks user cooldowns for rate-limiting
 cooldowns = {}
+_IsTesting = False
 
 def CommandHandler(irc, channel: str, info: tuple) -> bool:
+    global _IsTesting
+    
     command, args, user = info
     user = user.lower()
 
@@ -27,6 +30,12 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
         case "fish":
             now = time.time()
             last_used = cooldowns.get(user, 0)
+            
+            if _IsTesting and user in ADMINS:
+                fish = Reel(user)
+                Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
+                cooldowns[user] = now
+                return False
 
             if now - last_used < COOLDOWN_SECONDS:
                 return False
@@ -34,6 +43,14 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             fish = Reel(user)
             Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
             cooldowns[user] = now
+        
+        case "testing":
+            if user in ADMINS:
+                _IsTesting = not _IsTesting
+                Send(irc, channel, f"Testing mode is now {'ON' if _IsTesting else 'OFF'}.")
+            else:
+                return False
+
         
         case "quit":
             if user in ADMINS:
