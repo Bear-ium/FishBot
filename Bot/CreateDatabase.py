@@ -6,12 +6,14 @@ DB_NAME = "Storage.db"
 SQL_COMMANDS = [
     """
     CREATE TABLE IF NOT EXISTS catches (
+        fishId INTEGER PRIMARY KEY AUTOINCREMENT,
         user TEXT NOT NULL,
         fish_name TEXT NOT NULL,
         weight NUMERIC NOT NULL,
         value INTEGER NOT NULL,
         variant TEXT NOT NULL,
-        timestamp INTEGER NOT NULL
+        timestamp INTEGER NOT NULL,
+        isFav BOOLEAN NOT NULL
     );
     """,
     # Add more tables as needed

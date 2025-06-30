@@ -78,8 +78,8 @@ def Reel(user: str) -> Fish:
     db = getDB()
     db.execute(
         """
-        INSERT INTO catches (user, fish_name, weight, value, variant, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO catches (user, fish_name, weight, value, variant, timestamp, isFav)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
         (
             user,
@@ -87,8 +87,10 @@ def Reel(user: str) -> Fish:
             int(fish.weight * 1000),  # kg -> g
             fish.value,
             fish.variant,
-            int(time.time())
+            int(time.time()),
+            False
         )
     )
+
 
     return fish
