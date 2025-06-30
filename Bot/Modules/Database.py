@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from typing import Any, List, Tuple, Optional
 
 class Database:
@@ -10,9 +11,11 @@ class Database:
         
         @return None
         """
-        self.db_name = db_name
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.db_name = os.path.abspath(os.path.join(base_dir, "..", db_name))
         self.connection: Optional[sqlite3.Connection] = None
         self.cursor: Optional[sqlite3.Cursor] = None
+        print(f"[DB] Connecting to database at: {self.db_name}")
         self.connect()
 
     def connect(self):

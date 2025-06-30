@@ -39,7 +39,13 @@ class Fish:
         return f"{self.name} ({self.weight}kg) — {self.value} coins"
 
 def Reel(user: str) -> Fish:
-    fish_data = random.choice(FISH_SPECIES)
+    #fish_data = random.choice(FISH_SPECIES)
+    fish_data = random.choices(
+        FISH_SPECIES,
+        weights = [fish["chance"] for fish in FISH_SPECIES],
+        k = 1
+    )[0]
+    
     fish = Fish(
         name=fish_data["name"],
         min_weight=fish_data["min_weight"],
