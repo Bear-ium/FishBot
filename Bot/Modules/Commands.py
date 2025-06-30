@@ -45,11 +45,9 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             cooldowns[user] = now
         
         case "multi-fish":
-            if not user in ADMINS:
+            if user not in ADMINS or not args or not _IsTesting:
                 return False
-            
-            if not args:
-                return False
+
 
             try:
                 num = int(args[0])
