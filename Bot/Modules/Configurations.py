@@ -10,6 +10,7 @@ COOLDOWN_SECONDS = 5  # Delay between uses of -fish per user
 ADMINS = (
     "majojobears",
     "theactualevie",
+    "danmanplayz",
 )
 
 # Fish Species
