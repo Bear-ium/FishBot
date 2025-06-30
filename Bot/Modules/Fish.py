@@ -1,7 +1,16 @@
 import random
 import time
+import os
+
+from dotenv import load_dotenv
+from typing import cast
+
 from Modules.Configurations import FISH_SPECIES, FISH_VARIANT_TIERS
 from Modules.SafeDB import getDB
+from Modules.Webhook import Webhook
+
+load_dotenv()
+WEBHOOK_KEY = cast(str, os.getenv("WEBHOOK"))
 
 class Fish:
     VARIANTS = FISH_VARIANT_TIERS
@@ -52,6 +61,9 @@ def Reel(user: str) -> Fish:
         max_weight=fish_data["max_weight"],
         base_value=fish_data["base_value"]
     )
+    
+    Web = Webhook(WEBHOOK_KEY)
+    Web.send_message(f"{user} caught a {fish.name}")
 
     db = getDB()
     db.execute(
