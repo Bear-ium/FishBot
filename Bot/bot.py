@@ -9,12 +9,16 @@ from typing import cast
 from Modules.Twitch import GetUsername
 from Modules.Network import TwitchIRCClient
 from Modules.Commands import CommandHandler
+from Modules.Auth import TwitchAuth
 
 class TwitchBot:
     def __init__(self):
         load_dotenv()
+        auth = TwitchAuth()
+        
         self.botname =  cast(str, os.getenv("BOTNAME"))
-        self.token =    cast(str, os.getenv("OAUTH_ID"))
+        # self.token =    cast(str, os.getenv("OAUTH_ID"))
+        self.token =    auth.get_oauth_token()
         self.channel =  cast(str, os.getenv("LIVE_CHANNEL"))
 
         self.shutdown_requested = threading.Event()
