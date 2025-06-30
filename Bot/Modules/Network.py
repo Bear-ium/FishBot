@@ -26,6 +26,7 @@ class TwitchIRCClient:
         self.server = server
         self.port = port
         self.irc = None
+        self.recv_buffer = ""
 
     def connect(self):
         """
@@ -51,6 +52,7 @@ class TwitchIRCClient:
         """
         if not self.irc:
             raise ConnectionError("IRC connection not established.")
+        print(f"[IRC Raw] {message}")
         self.irc.send((message + "\r\n").encode("utf-8"))
 
     def recv(self, buffer_size: int = 2048) -> str:
@@ -63,7 +65,18 @@ class TwitchIRCClient:
         """
         if not self.irc:
             raise ConnectionError("IRC connection not established.")
-        return self.irc.recv(buffer_size).decode("utf-8")
+        
+        while '\r\n' not in self.recv_buffer:
+            try:
+                chunk = self.irc.recv(buffer_size).decode("utf-8")
+                if not chunk:
+                    raise ConnectionError("Disconnected ffrom server.")
+                self.recv_buffer += chunk
+            except socket.timeout:
+                raise
+        
+        line, self.recv_buffer = self.recv_buffer.split('\r\n', 1)
+        return line
 
     def close(self):
         """
