@@ -79,17 +79,19 @@ FISH_SPECIES = [
     {"name": "Mahi-Mahi",              "min_weight":  6.93, "max_weight": 23.47, "base_value":  59, "chance":     3},
     {"name": "Swordfish",              "min_weight":  6.54, "max_weight":  8.42, "base_value":  53, "chance":     3},
     {"name": "Yellowfin Tuna",         "min_weight":  7.12, "max_weight": 21.24, "base_value":  31, "chance":     3},
-    {"name": "Megalodon",              "min_weight": 14.98, "max_weight": 41.76, "base_value":  77, "chance":   0.5},
 
     # 🔴 Legendary
     {"name": "Coelacanth",        "min_weight": 14.81, "max_weight": 42.52, "base_value": 108, "chance":    0.5},
     {"name": "Mekong Catfish",    "min_weight": 14.39, "max_weight": 53.62, "base_value":  79, "chance":    0.5},
     {"name": "Arapaima gigas",    "min_weight":  9.91, "max_weight": 43.78, "base_value": 117, "chance":    0.5},
     {"name": "Great White Shark", "min_weight":  8.20, "max_weight": 51.50, "base_value": 125, "chance":    0.5},
-    {"name": "Megalodon",         "min_weight": 50.00, "max_weight":156.00, "base_value":   1, "chance":   0.05},
+    {"name": "Megalodon",         "min_weight": 50.00, "max_weight":156.00, "base_value": 185, "chance":   0.05},
 
     # ⚪ Mythic
-    {"name": "Forgi",             "min_weight":  0.01, "max_weight":1000.00, "base_value":9999, "chance":0.0001},
+    {"name": "🐸 Forgi",             "min_weight":  0.01, "max_weight": 1000.00, "base_value":      9999, "chance": 0.0001},
+    {"name": "🐿️ Chipmunk Filter",   "min_weight":  0.01, "max_weight":    0.1, "base_value":      55000, "chance": 0.0001},
+    {"name": "🦊 Eevee of the Lake", "min_weight":  0.01, "max_weight":   54.00, "base_value":   1000000, "chance": 0.0001},
+    {"name": "🐻 Debug Stick",       "min_weight":  0.01, "max_weight":   5.00, "base_value":      69420, "chance": 0.0001},
 ]
 
 # Defines variant types, their appearance chance (%), and reward multiplier
