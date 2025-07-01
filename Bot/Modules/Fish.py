@@ -76,6 +76,8 @@ def Reel(user: str) -> Fish:
 
 
     db = getDB()
+    
+    # Add fish into catches table
     db.execute(
         """
         INSERT INTO catches (user, fish_name, weight, value, variant, timestamp, isFav)
@@ -91,6 +93,20 @@ def Reel(user: str) -> Fish:
             False
         )
     )
+    
+    # Add money into users table
+    db.execute(
+        """
+        INSERT INTO profiles (user, coins)
+        VALUES (?, ?)
+        ON CONFLICT(user) DO UPDATE SET coins = coins + excluded.coins
+        """,
+        (
+            user,
+            fish.value
+        )
+    )
+
 
 
     return fish

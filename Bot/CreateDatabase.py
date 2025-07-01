@@ -16,6 +16,13 @@ SQL_COMMANDS = [
         isFav BOOLEAN NOT NULL
     );
     """,
+    """
+    CREATE TABLE IF NOT EXISTS profiles (
+        userid INTEGER PRIMARY KEY AUTOINCREMENT,
+        user TEXT UNIQUE,
+        coins INTEGER
+    )
+    """
     # Add more tables as needed
 ]
 
