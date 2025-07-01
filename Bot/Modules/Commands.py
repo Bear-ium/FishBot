@@ -48,7 +48,6 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             if user not in ADMINS or not args or not _IsTesting:
                 return False
 
-
             try:
                 num = int(args[0])
             except ValueError as e:
@@ -60,6 +59,19 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
                 Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
 
             Send(irc, channel, f"Fished x{num} times!")
+            
+        case "upgrade":
+            upgrade_type = args[0].strip()[0]
+            
+            match upgrade_type:
+                case "b":
+                    Send(irc, channel, "Upgrade boat")
+            
+                case "r":
+                    Send(irc, channel, "Upgrade Fishing Rod")
+            
+                
+            return False
 
         
         case "testing":
