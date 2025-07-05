@@ -64,15 +64,10 @@ def Reel(user: str) -> Fish:
         base_value=fish_data["base_value"]
     )
     
-    (
-        lambda: (
-            None
-            if fish.variant_multiplier <= 4.5
-            else Web.send_message(f"{user} caught a Rare ({fish.variant}) variant!")
-            if fish.variant_multiplier <= 6.5
-            else Web.send_message(f"{user} caught a Legendary ({fish.variant}) variant!")
-        )
-    )()
+    if fish.variant_multiplier > 6.5:
+        Web.send_message(f"{user} caught a Legendary ({fish.variant}) variant!")
+    elif fish.variant_multiplier > 4.4:
+        Web.send_message(f"{user} caught a Rare ({fish.variant}) variant!")
 
 
     db = getDB()
