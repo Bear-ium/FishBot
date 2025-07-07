@@ -137,6 +137,10 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
         
         case "rod":
             pass
+        
+        case "index" | "list" | "info" | "guide":
+            Send(irc, channel, "Check out the Fish Index over at: https://bearium.dev/Projects/FishBot/FishBot.html")
+            return False
 
         case "testing":
             if user in ADMINS:
