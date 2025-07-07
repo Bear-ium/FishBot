@@ -8,7 +8,7 @@ from typing import cast
 
 from Modules.Twitch import GetUsername
 from Modules.Network import TwitchIRCClient
-from Modules.Commands import CommandHandler
+from Modules.CommandsManager import CommandHandler
 from Modules.Auth import TwitchAuth
 
 class TwitchBot:

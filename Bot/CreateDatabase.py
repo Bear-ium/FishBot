@@ -19,8 +19,10 @@ SQL_COMMANDS = [
     """
     CREATE TABLE IF NOT EXISTS profiles (
         user TEXT PRIMARY KEY,
-        coins INTEGER
-    )
+        "coins"	INTEGER DEFAULT 0,
+        "rod_level"	INTEGER NOT NULL DEFAULT 1,
+        "boat_level"	INTEGER NOT NULL DEFAULT 0
+    );
     """
     # Add more tables as needed
 ]
