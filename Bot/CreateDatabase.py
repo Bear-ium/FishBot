@@ -18,8 +18,7 @@ SQL_COMMANDS = [
     """,
     """
     CREATE TABLE IF NOT EXISTS profiles (
-        userid INTEGER PRIMARY KEY AUTOINCREMENT,
-        user TEXT UNIQUE,
+        user TEXT PRIMARY KEY,
         coins INTEGER
     )
     """
