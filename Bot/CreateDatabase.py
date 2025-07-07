@@ -5,23 +5,25 @@ DB_NAME = "Storage.db"
 
 SQL_COMMANDS = [
     """
-    CREATE TABLE IF NOT EXISTS catches (
-        fishId INTEGER PRIMARY KEY AUTOINCREMENT,
-        user TEXT NOT NULL,
-        fish_name TEXT NOT NULL,
-        weight NUMERIC NOT NULL,
-        value INTEGER NOT NULL,
-        variant TEXT NOT NULL,
-        timestamp INTEGER NOT NULL,
-        isFav BOOLEAN NOT NULL
+    CREATE TABLE IF NOT EXISTS "catches" (
+        "fishId"	INTEGER,
+        "user"	TEXT NOT NULL,
+        "fish_name"	TEXT NOT NULL,
+        "weight"	NUMERIC NOT NULL,
+        "value"	INTEGER NOT NULL,
+        "variant"	TEXT NOT NULL,
+        "timestamp"	INTEGER NOT NULL,
+        "isFav"	BOOLEAN NOT NULL,
+        PRIMARY KEY("fishId" AUTOINCREMENT)
     );
     """,
     """
-    CREATE TABLE IF NOT EXISTS profiles (
-        user TEXT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS "profiles" (
+        "user"	TEXT,
         "coins"	INTEGER DEFAULT 0,
         "rod_level"	INTEGER NOT NULL DEFAULT 1,
-        "boat_level"	INTEGER NOT NULL DEFAULT 0
+        "boat_level"	INTEGER NOT NULL DEFAULT 0,
+        PRIMARY KEY("user")
     );
     """
     # Add more tables as needed
