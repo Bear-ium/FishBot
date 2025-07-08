@@ -1,15 +1,29 @@
 from Modules.SafeDB import getDB
 
-def UpgradeFishingRodLevel(user: str, confirm: int):
+def GetFishingRodLevel(user):
     db = getDB()
-    r = 1        # Default to 1 for Module Error
-    i = "NomNom" # Twitch Emoji
     
     fishingRodLevel = db.fetchone(
             "SELECT rod_level FROM profiles WHERE user = ?",
             (user,)
         )
-    fishingRodLevel = fishingRodLevel[0] if fishingRodLevel else 1
+    return fishingRodLevel[0] if fishingRodLevel else 1
+
+def GetFishingBoatLevel(user):
+    db = getDB()
+    
+    boatLevel = db.fetchone(
+            "SELECT boat_level FROM profiles WHERE user = ?",
+            (user,)
+        )
+    return boatLevel[0] if boatLevel else 0
+
+def UpgradeFishingRodLevel(user: str, confirm: int):
+    db = getDB()
+    r = 1        # Default to 1 for Module Error
+    i = "NomNom" # Twitch Emoji
+    
+    fishingRodLevel = GetFishingRodLevel(user)
     
     coins = db.fetchone(
             "SELECT coins FROM profiles WHERE user = ?",
@@ -54,11 +68,7 @@ def UpgradeFishingBoatLevel(user: str, confirm: int):
     r = 1        # Default to 1 for Module Error
     i = "NomNom" # Twitch Emoji
     
-    boatLevel = db.fetchone(
-            "SELECT boat_level FROM profiles WHERE user = ?",
-            (user,)
-        )
-    boatLevel = boatLevel[0] if boatLevel else 1
+    boatLevel = GetFishingBoatLevel(user)
     
     coins = db.fetchone(
             "SELECT coins FROM profiles WHERE user = ?",
@@ -97,14 +107,6 @@ def UpgradeFishingBoatLevel(user: str, confirm: int):
         i = f"{cost:,}"
     
     return r, i #Request, Info
-
-def GetFishingRodLevel(user):
-    db = getDB()
-    pass
-
-def GetFishingBoatLevel(user):
-    db = getDB()
-    pass
 
 def Balance(user: str) -> str:
     db = getDB()

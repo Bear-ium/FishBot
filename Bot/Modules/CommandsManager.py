@@ -133,10 +133,12 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             return False
         
         case "boat":
-            pass
+            Send(irc, channel, f"@{user} your Boat level is: {GetFishingBoatLevel(user)}")
+            return False
         
         case "rod":
-            pass
+            Send(irc, channel, f"@{user} your Fishing Rod level is: {GetFishingRodLevel(user)}")
+            return False
         
         case "index" | "list" | "info" | "guide":
             Send(irc, channel, "Check out the Fish Index over at: https://bearium.dev/Projects/FishBot/FishBot.html")
