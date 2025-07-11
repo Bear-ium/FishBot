@@ -7,7 +7,7 @@ set "REQPATH=%CD%\requirements.txt"
 
 if NOT EXIST "%ACTIVATE_PATH%" (
     echo Creating VirtualEnvironment...
-    python3.12 -m venv "%VENV_PATH%"
+    py -.12 -m venv "%VENV_PATH%"
 ) ELSE (
   echo VirtualEnvironment already exists, activating...
 )
