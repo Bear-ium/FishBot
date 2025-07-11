@@ -92,7 +92,7 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
             
             match upgrade_type:
                 case "b":
-                    request, info = UpgradeFishingBoatLevel(user, confirm)
+                    request, info = UpgradeFishingBoatLevel(user, confirm) # type: ignore
                     
                     # 1   = Module Error
                     # 100 = Info
@@ -110,7 +110,7 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
                     return False
             
                 case "r":
-                    request, info = UpgradeFishingRodLevel(user, confirm)
+                    request, info = UpgradeFishingRodLevel(user, confirm) # type: ignore
                     
                     # 1   = Module Error
                     # 100 = Info

@@ -10,16 +10,17 @@ class Webhook:
         self.default_username = default_username
         self.default_avatar_url = default_avatar_url or "https://em-content.zobj.net/source/apple/419/shark_1f988.png"
 
-    def send_message(self, content: str, username: Optional[str] = None, avatar_url: Optional[str] = None):
-        data = {
-            "content": content,
-            "username": username or self.default_username,
-            "avatar_url": avatar_url or self.default_avatar_url
-        }
+    def send_message(self, content: str, toggle: Optional[bool] = True, username: Optional[str] = None, avatar_url: Optional[str] = None):
+        if toggle:
+            data = {
+                "content": content,
+                "username": username or self.default_username,
+                "avatar_url": avatar_url or self.default_avatar_url
+            }
 
-        data = {k: v for k, v in data.items() if v is not None}
+            data = {k: v for k, v in data.items() if v is not None}
 
-        response = requests.post(self.url, json=data)
+            response = requests.post(self.url, json=data)
 
-        if response.status_code != 204:
-            raise Exception(f"Failed to send webhook: {response.status_code}, {response.text}")
+            if response.status_code != 204:
+                raise Exception(f"Failed to send webhook: {response.status_code}, {response.text}")

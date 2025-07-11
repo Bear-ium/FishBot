@@ -18,7 +18,7 @@ class TwitchBot:
         
         self.botname =  cast(str, os.getenv("BOTNAME"))
         # self.token =    cast(str, os.getenv("OAUTH_ID"))
-        self.token =    auth.get_oauth_token()
+        self.token =    cast(str, auth.get_oauth_token())
         self.channel =  cast(str, os.getenv("LIVE_CHANNEL"))
 
         self.shutdown_requested = threading.Event()

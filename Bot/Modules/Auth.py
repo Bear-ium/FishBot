@@ -52,8 +52,10 @@ class TwitchAuth:
                     file.write(line)
 
     def _update_runtime_env(self):
-        os.environ['TWITCH_OAUTH'] = self.oauth_token
-        os.environ['TWITCH_REFRESH_TOKEN'] = self.refresh_token
+        if self.oauth_token is not None:
+            os.environ['TWITCH_OAUTH'] = self.oauth_token
+        if self.refresh_token is not None:
+            os.environ['TWITCH_REFRESH_TOKEN'] = self.refresh_token
 
     def get_oauth_token(self):
         return self.oauth_token
