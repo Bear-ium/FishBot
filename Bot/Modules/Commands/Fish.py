@@ -10,6 +10,8 @@ from Modules.Configurations import FISH_SPECIES, FISH_VARIANT_TIERS
 from Modules.SafeDB import getDB
 from Modules.Webhook import Webhook
 
+from Commands.User import GetFishingRodLevel, GetFishingBoatLevel
+
 load_dotenv()
 WEBHOOK_KEY = cast(str, os.getenv("WEBHOOK"))
 Web = Webhook(WEBHOOK_KEY)
@@ -109,21 +111,8 @@ def Reel(user: str) -> List[Fish]:
     db = getDB()
     
     # Get Fishing Rod Level
-    fishing_rod_level_RESULT = db.fetchone(
-        "SELECT rod_level FROM profiles WHERE user = ?", 
-        (
-            user,
-        )
-    )
-    boat_level_RESULT = db.fetchone(
-        "SELECT boat_level FROM profiles WHERE user = ?",
-        (
-            user,
-        )
-    )
-
-    rod_level = fishing_rod_level_RESULT[0] if fishing_rod_level_RESULT else 1
-    boat_level = boat_level_RESULT[0] if boat_level_RESULT else 0
+    rod_level = GetFishingRodLevel()
+    boat_level = GetFishingBoatLevel()
     
     count = rod_level
     

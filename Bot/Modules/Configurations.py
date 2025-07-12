@@ -115,7 +115,7 @@ FISH_VARIANT_TIERS = [
     {"name": "🏅 Golden",       "chance": 1.2,  "multiplier": 2.2,   "boat_level": 14},
     {"name": "❄️ Frozen",       "chance": 0.6,  "multiplier": 2.4,   "boat_level": 10},
 
-    # 🟢 Common (Total: 23.59%)
+    # 🟢 Common (Total: 22.79%)
     {"name": "✨ Glowing",      "chance": 1.2,  "multiplier": 1.9,   "boat_level": 8},
     {"name": "🍄 Enchanted",    "chance": 1.0,  "multiplier": 1.7,   "boat_level": 6},
     {"name": "☠️ Toxic",        "chance": 1.6,  "multiplier": 1.5,   "boat_level": 8},
