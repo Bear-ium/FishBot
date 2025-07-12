@@ -6,6 +6,7 @@ from Modules.Configurations import COOLDOWN_SECONDS, ADMINS, COMMAND_HANDLE
 # Command Modules
 from Modules.Commands.Fish import Reel
 from Modules.Commands.User import GetFishingRodLevel, GetFishingBoatLevel, UpgradeFishingBoatLevel, UpgradeFishingRodLevel, Balance
+from Modules.Commands.Inventory import Inventory
 
 # Tracks user cooldowns for rate-limiting
 cooldowns = {}
@@ -68,22 +69,6 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
                 Send(irc, channel, f"{user}, {requestedUser} has {coins}c.")
             
             return False
-
-        # case "multi-fish":
-        #     if user not in ADMINS or not args or not _IsTesting:
-        #         return False
-
-        #     try:
-        #         num = int(args[0])
-        #     except ValueError as e:
-        #         print(f"[DEBUG] Invalid number provided: {e}")
-        #         return False
-
-        #     for i in range(1, num + 1):
-        #         fish = Reel(user)
-        #         Send(irc, channel, f"{user} caught a {fish.name} weighing {fish.weight}kg! (+{fish.value} coins)")
-
-        #     Send(irc, channel, f"Fished x{num} times!")
             
         case "upgrade":
             upgrade_type = args[0].strip()[0].lower() if len(args) > 0 and args[0].strip() else None
@@ -142,6 +127,14 @@ def CommandHandler(irc, channel: str, info: tuple) -> bool:
         
         case "index" | "list" | "info" | "guide":
             Send(irc, channel, "Check out the Fish Index over at: https://bearium.dev/Projects/FishBot/FishBot.html")
+            return False
+        
+        case "inventory" | "inv":
+            Send(
+                irc,
+                channel,
+                Inventory(user, args)
+            )
             return False
 
         case "testing":

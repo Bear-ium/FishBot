@@ -27,3 +27,30 @@ WEBHOOK=your_discord_webhook
 ```
 
 > ⚠️ **Important:** Never commit your `.env` file to Git. Add it to `.gitignore` to protect sensitive info.
+
+
+# Setup Info
+### 📦 Database
+1. Go to FishBot/Bot/
+2. Create `Storage.db`
+3. Run `CreateDatabase.py`
+
+### 🔐 Env
+1. Go to FishBot/
+2. Create `.env`
+3. Format it like above in the `README.md`
+4. Put in your `CLIENT_ID` and `CLIENT_SECRET`
+5. Go to FishBot/Auth
+6. Run `app.py`
+7. Log in with your BOT account!
+8. Save your refresh token in the `.env` under `TWITCH_REFRESH_TOKEN`
+9. Fill in the rest as per their descriptions
+
+### 🚀 Run the Bot
+1. Go to FishBot/
+2. Double click on `RUN.bat`
+3. Wait for `venv` & `requirements.txt` setup
+4. Type `cd Bot` in the command line which appeared after running `RUN.bat`
+5. Then run the `bot.py` by either typing `python3.12 bot.py` OR `python bot.py` OR `bot.py`
+6. If it is running to go the channel you specified it wanting to be active in and type in chat `-hello`, it should respond if no errors occured.
+7. If you want to stop it type in chat `-quit`

@@ -40,16 +40,27 @@ def Inventory(user: str, args: list) -> str: #type: ignore
         3: "value",
         4: "variant",
         5: "timestamp",
-        6: "favourites"
+        6: "favourites",
+        7: "None"
     }
-
-    filter_by = filter_map.get(int(args[0] if args else 0) if str(filter_by).isdigit() else 1, "fish_name") # type: ignore
+    reverse_filter_map = {v: k for k, v in filter_map.items()}
+    
+    
+    arg = args[0].lower() if args else None
+    if arg is None:
+        filter_by = 7  # default to "None"
+    elif arg.isdigit():
+        filter_by = int(arg) if int(arg) in filter_map else 1
+    else:
+        filter_by = reverse_filter_map.get(arg, 1)
+    
+    
     sort_by = args[1] if len(args) > 1 else 0
     
     db = getDB()
     
     match int(filter_by):
-        case 1:
+        case 1: #
             fish_caught = db.fetchall(
                 "SELECT fish_name FROM catches WHERE user = ?",
                 (user,)
@@ -57,7 +68,7 @@ def Inventory(user: str, args: list) -> str: #type: ignore
             
             fish_total = len(fish_caught)
             
-            return f"{fish_total}"
+            return f"You have caught x{fish_total} fish!"
 
         case 2:
             return ""
@@ -65,14 +76,14 @@ def Inventory(user: str, args: list) -> str: #type: ignore
             return ""
         case 4:
             variants_caught = db.fetchall(
-                "SELECT variant FROM catches WHERE user = ?",
+                "SELECT variant FROM catches WHERE user = ? AND variant != 'Normal'",
                 (user,)
             )
             
             variants_total = len(variants_caught)
             
             if sort_by == "all":
-                return f"{variants_total}"
+                return f"You have caught x{variants_total} variants{'s' if (variants_total > 1) else ''}"
             elif sort_by == "":
                 return ""
         case 5:
@@ -80,13 +91,15 @@ def Inventory(user: str, args: list) -> str: #type: ignore
 
         case 6:
             favourites = db.fetchall(
-                "SELECT fish_name FROM catches WHERE user = ? AND isFav = ?",
+                "SELECT fish_name, variant FROM catches WHERE user = ? AND isFav = ?",
                 (user,1,)
             )
-            favourite_names = [row[0] for row in favourites][:5]
-            favourites_string = " | ".join(favourite_names)
-            
-            return favourites_string
+            favourites = favourites[:5]
+
+            formatted = [f"{variant} {fish_name}" for fish_name, variant in favourites]
+
+            favourites_string = " | ".join(formatted)
+            return f"Your favourite fish are: {favourites_string}"
 
         case _:
             return f"Please refer to our website and see command usage -inventory <filter> <sort>"
